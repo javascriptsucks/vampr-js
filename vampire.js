@@ -67,10 +67,72 @@ class Vampire {
       if (!tempVamp.creator) return tempVamp;
     }
   }
+
+  // Returns the vampire object with that name, or null if no vampire exists with that name
+  vampireWithName(name) {
+    if (this.name === name) {
+      return this;
+    }
+    for (const descendent of this.offspring) {
+      //console.log(descendent, name);
+      //console.log(descendent.name === name);
+      if (descendent.name === name) {
+        return descendent;
+      } else {
+        descendent.vampireWithName(name);
+      }
+    }
+    return null;
+  }
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+    let count = 0;
+    for (const descendent of this.offspring) {
+      count++;
+      if (descendent.offspring) {
+        count = count + descendent.totalDescendents;
+      }
+
+    }
+    return count;
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
+    let res = [];
+
+    for (const descendent of this.offspring) {
+      if (descendent.yearConverted > 1980) {
+        res.push(descendent);
+      }
+      if (descendent.offspring) {
+        res = res.concat(descendent.allMillennialVampires);
+      }
+    }
+    return res;
+  }
+
+
+
 }
 
 
+let rootVampire = new Vampire("root");
 
+let offspring1, offspring2, offspring3, offspring4, offspring5;
+offspring1 = new Vampire("andrew");
+offspring2 = new Vampire("sarah");
+offspring3 = new Vampire("c");
+offspring4 = new Vampire("d");
+offspring5 = new Vampire("e");
+rootVampire.addOffspring(offspring1);
+offspring1.addOffspring(offspring2);
+rootVampire.addOffspring(offspring3);
+offspring3.addOffspring(offspring4);
+offspring4.addOffspring(offspring5);
+
+console.log(rootVampire.vampireWithName(offspring5.name));
 
 module.exports = Vampire;
 
