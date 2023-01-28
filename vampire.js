@@ -69,18 +69,35 @@ class Vampire {
   }
 
   // Returns the vampire object with that name, or null if no vampire exists with that name
+  //vampireWithName(name) {
+  //  if (this.name === name) {
+  //    return this;
+  //  }
+  //  let res = null;
+  //  if (this.offspring) {
+  //    for (const descendent of this.offspring) {
+  //      //console.log(descendent.name, name);
+  //      //console.log(descendent.name === name);
+  //      if (descendent.name === name) {
+  //        res = descendent;
+  //      } else {
+  //        res = descendent.vampireWithName(name);
+  //      }
+  //    }
+  //  }
+  //  return res;
+  //}
+
   vampireWithName(name) {
     if (this.name === name) {
       return this;
     }
-    for (const descendent of this.offspring) {
-      //console.log(descendent, name);
-      //console.log(descendent.name === name);
-      if (descendent.name === name) {
-        return descendent;
-      } else {
-        descendent.vampireWithName(name);
+
+    for (let child of this.offspring) {
+      if (child.vampireWithName(name) !== undefined && child.vampireWithName(name) !== null) {
+        return child.vampireWithName(name);
       }
+
     }
     return null;
   }
